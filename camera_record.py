@@ -78,40 +78,38 @@ def record_video(duration, user, db, storage):
     # The loop goes through the array of images and writes each image to the video file
     for i in range(len(images)):
         out.write(images[i])
-
+    out.release()
     images = []
+
     print("Recording Done")
 
     print('After adding frames, size = ' + str(os.path.getsize('video.avi')))
 
-    # key = db.generate_key()
+    key = db.generate_key()
 
-    out.release()
 
     print('After release, size = ' + str(os.path.getsize('video.avi')))
 
     # path = "videos/video.avi"
 
-    storage.child("videos2/video.avi").put("video.avi", user['idToken'])
+    # storage.child("videos2/video.avi").put("video.avi", user['idToken'])
 
-    time.sleep(3)
+    result = storage.child("videos").child(key).child("video.avi").put('video.avi', user['idToken'] )
+    print('Video put, result = ' + str(result))
 
-    # storage.child("videos/videoX.avi").put("video.avi", user['idToken'])    # This one works!!
+    url = storage.child("videos").child(key).child("video.avi").get_url(user['idToken'])
+    path = result["name"]
 
-    # result = storage.child("videos").child(key).child("videos/video.avi").put('video.avi', user['idToken'] )
-    # print('Video put, result = ' + str(result))
-    #
-    # url = storage.child("videos").child(key).child("videos/video.avi").get_url(user['idToken'])
-    #
-    # print('Video uploaded to URL ' + str(url))
-    # rec = write_db_rec(db, user, key, url)
-    #
-    # print('DB video rec written' + str(rec))
+    print('Video uploaded to URL ' + str(url))
+    rec = write_db_rec(db, user, key, url)
+
+    print('DB video rec written' + str(rec))
 
 def write_db_rec(db, user, key, url):
     data = {}
     data["datetime"] = str(datetime.datetime.now())
     data["timestamp"] = int(datetime.datetime.now().timestamp() * 1000)
+    data["path"] = url
     data["url"] = url
     db.child("Videos").child(key).child("videoRec").set(data, user['idToken'])
     return data
