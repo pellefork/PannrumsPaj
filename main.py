@@ -5,7 +5,9 @@
 
 import time
 
-import pyrebase
+# import pyrebase
+
+from firebase import Firebase
 
 from notifier import notify_clients
 from temp_logger import record_temps
@@ -21,7 +23,7 @@ config = {
 }
 
 def init_fb():
-    firebase = pyrebase.initialize_app(config)
+    firebase = Firebase(config)
     return firebase
 
 def auth(firebase):

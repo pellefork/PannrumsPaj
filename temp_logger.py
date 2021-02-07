@@ -9,7 +9,7 @@ import digitalio
 
 import adafruit_max31865
 
-import pyrebase
+# import pyrebase
 from pyfcm import FCMNotification
 
 os.system('modprobe w1-gpio')
