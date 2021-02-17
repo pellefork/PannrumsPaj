@@ -15,7 +15,7 @@ vid_framerate = 10
 capture = VideoCaptureAsync(src=0, width=vid_w, height=vid_h)
 
 #Intiate codec for Video recording object
-fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+fourcc = cv2.VideoWriter_fourcc(*'MP4V')
 
 def record_videos(duration, sleep_time, user, db, storage):
     while True:
@@ -24,7 +24,7 @@ def record_videos(duration, sleep_time, user, db, storage):
 
 def record_video(duration, user, db, storage):
 
-    print('Before start, size = ' + str(os.path.getsize('video.avi')))
+    # print('Before start, size = ' + str(os.path.getsize('video.mp4')))
 
     #start video capture
     print('Starting capture')
@@ -66,53 +66,40 @@ def record_video(duration, user, db, storage):
 
     print('len(images) ' + str(len(images)))
 
-    # The following line initiates the video object and video file named 'video.avi'
+    # The following line initiates the video object and video file named 'video.mp4'
     # of width and height declared at the beginning.
-    out = cv2.VideoWriter('video.avi', fourcc, fps, (vid_w,vid_h))
+    out = cv2.VideoWriter('video.mp4', fourcc, fps, (vid_w,vid_h))
 
-    size = os.path.getsize('video.avi')
 
-    print('Before adding frames, size = ' + str(os.path.getsize('video.avi')))
+    print('Before adding frames, size = ' + str(os.path.getsize('video.mp4')))
 
     print("creating video")
     # The loop goes through the array of images and writes each image to the video file
     for i in range(len(images)):
         out.write(images[i])
     out.release()
-    images = []
 
     print("Recording Done")
 
-    print('After adding frames, size = ' + str(os.path.getsize('video.avi')))
+    print('After adding frames, size = ' + str(os.path.getsize('video.mp4')))
 
     key = db.generate_key()
 
 
-    print('After release, size = ' + str(os.path.getsize('video.avi')))
+    print('After release, size = ' + str(os.path.getsize('video.mp4')))
 
-    # path = "videos/video.avi"
-
-    # storage.child("videos2/video.avi").put("video.avi", user['idToken'])
-
-    result = storage.child("videos").child(key).child("video.avi").put('video.avi', user['idToken'] )
+    result = storage.child("videos").child(key).child("video.mp4").put('video.mp4', user['idToken'] )
     print('Video put, result = ' + str(result))
 
-    url = storage.child("videos").child(key).child("video.avi").get_url(user['idToken'])
-    path = result["name"]
+    url = storage.child("videos").child(key).child("video.mp4").get_url(user['idToken'])
 
     print('Video uploaded to URL ' + str(url))
-    rec = write_db_rec(db, user, key, url)
+    rec = write_db_rec(db, user, key, result)
 
-    print('DB video rec written' + str(rec))
+    print('DB video rec written: ' + str(key) + ' ' + str(result))
 
-def write_db_rec(db, user, key, url):
-    data = {}
-    data["datetime"] = str(datetime.datetime.now())
-    data["timestamp"] = int(datetime.datetime.now().timestamp() * 1000)
-    data["path"] = url
-    data["url"] = url
-    db.child("Videos").child(key).child("videoRec").set(data, user['idToken'])
-    return data
+def write_db_rec(db, user, key, result):
+    db.child("Videos").child(key).child("videoRec").set(result, user['idToken'])
 
 
 

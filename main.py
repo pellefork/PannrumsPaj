@@ -73,9 +73,9 @@ if __name__ == '__main__':
 
     video_proc = start_video_recording()
     print('Video recording started')
-
-    temp_proc = start_temp_logging()
-    print('Temp logging started')
+    #
+    # temp_proc = start_temp_logging()
+    # print('Temp logging started')
 
     notify_clients('Test message', 'Lots and lots of text...', db, user)
 
@@ -85,11 +85,11 @@ if __name__ == '__main__':
     video_proc.join()
     video_proc.close()
     print('Video recording stopped')
-
-    temp_proc.kill()
-    temp_proc.join()
-    temp_proc.close()
-    print('Temp logging stopped')
+    #
+    # temp_proc.kill()
+    # temp_proc.join()
+    # temp_proc.close()
+    # print('Temp logging stopped')
 
     print('Finished - exiting')
 
