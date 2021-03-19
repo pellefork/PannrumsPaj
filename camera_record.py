@@ -1,6 +1,7 @@
 import cv2
 # Import the video capturing function
 from video_capture import VideoCaptureAsync
+from color_detector import detect_redness
 import time
 import datetime
 import os
@@ -49,9 +50,9 @@ def record_video(duration, user, db, storage):
             prev = time.time()
             frames += 1
             images.append(new_frame)
+            # redness = detect_redness(new_frame)
+            # print('Redness = ' + str(redness))
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
     capture.stop()
 
     # cv2.destroyAllWindows()
